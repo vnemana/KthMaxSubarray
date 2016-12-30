@@ -2,28 +2,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-/**
- * Created by Mahesh on 12/20/16.
- */
-
-class TestCase {
-    int[] array;
-    int numberOfQueries;
-    int[] maxElement;
-
-    TestCase(int[] array, int numQueries, int[] maxE) {
-        this.array = array;
-        this.numberOfQueries = numQueries;
-        this.maxElement = maxE;
-    }
-}
-
 public class KthMaxDriver {
     int numberOfTestCases;
     int arraySize;
     int numberOfQueries;
     ArrayList<TestCase> testCases;
-    KthMaxDriver (String fileName) {
+    KthMaxDriver (String fileName, String outFileName) {
         testCases = new ArrayList<TestCase>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -52,6 +36,23 @@ public class KthMaxDriver {
                 TestCase testCase = new TestCase(array, numberOfQueries, maxElements);
                 testCases.add(ii, testCase);
             }
+
+            File f = new File(outFileName);
+            FileOutputStream fos = new FileOutputStream(f);
+            PrintStream ps = new PrintStream(fos);
+
+            for (int ii=0; ii<testCases.size(); ii++) {
+                TestCase testCase = testCases.get(ii);
+                testCase.sortSubArrays();
+                //testCase.showSubArrays();
+                for (int jj=0; jj<testCase.numberOfQueries; jj++) {
+                    //testCase.getMaxElement(testCase.maxElements[jj]);
+                    testCase.showMaxElement(testCase.getMaxElement(jj), ps);
+                }
+            }
+            ps.close();
+            fos.flush();
+            fos.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -72,8 +73,8 @@ public class KthMaxDriver {
             }
             System.out.println();
             System.out.print("MaxElement: ");
-            for (int kk=0; kk<tCase.maxElement.length; kk++)
-                System.out.print (tCase.maxElement[kk] + " ");
+            for (int kk=0; kk<tCase.maxElements.length; kk++)
+                System.out.print (tCase.maxElements[kk] + " ");
             System.out.println();
             System.out.println ("-- End Test Case " + ii + "--");
         }
